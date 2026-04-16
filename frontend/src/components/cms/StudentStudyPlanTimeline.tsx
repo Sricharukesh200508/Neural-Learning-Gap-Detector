@@ -1,5 +1,6 @@
 'use client';
 
+import { API_BASE } from '@/lib/api';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, PlayCircle, BookOpen, ChevronDown, ChevronUp, Lock } from 'lucide-react';
@@ -24,7 +25,7 @@ export default function StudentStudyPlanTimeline({ plan }: { plan: any }) {
     // Sync progress to teacher dashboard
     const sid = localStorage.getItem('student_id');
     if (sid) {
-      await fetch('http://localhost:8000/api/student/study-plan-progress', {
+      await fetch('${API_BASE}/api/student/study-plan-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -39,7 +40,7 @@ export default function StudentStudyPlanTimeline({ plan }: { plan: any }) {
   const finishPlan = async () => {
     const sid = localStorage.getItem('student_id');
     if (sid) {
-      await fetch('http://localhost:8000/api/student/study-plan-progress', {
+      await fetch('${API_BASE}/api/student/study-plan-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

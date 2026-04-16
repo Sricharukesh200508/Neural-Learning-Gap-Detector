@@ -1,5 +1,6 @@
 'use client';
 
+import { API_BASE } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -17,7 +18,7 @@ export default function SubjectsCMS() {
   // 1. SYNC WITH NEURAL STORE
   const fetchSubjects = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/cms/data');
+      const res = await fetch('${API_BASE}/api/cms/data');
       const data = await res.json();
       setSubjects(data.subjects || []);
     } catch (err) {
@@ -33,7 +34,7 @@ export default function SubjectsCMS() {
   const handleAddSubject = async () => {
     if (!newSubject.name) return;
     try {
-      const res = await fetch('http://localhost:8000/api/cms/subjects', {
+      const res = await fetch('${API_BASE}/api/cms/subjects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newSubject, id: Date.now() })

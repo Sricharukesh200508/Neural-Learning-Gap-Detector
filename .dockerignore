@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+myenv/
+.venv/
+venv/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.turbo/
+
+# Large ML files (already in repo root, not needed by Docker build context)
+*.mat
+*.pth
+
+# Git + IDE
+.git/
+.gitignore
+.vscode/
+
+# Backend storage (runtime data, not needed in image)
+backend/storage/
+
+# Misc
+*.log
+*.tmp
+temp.mp4

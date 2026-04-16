@@ -1,5 +1,6 @@
 'use client';
 
+import { API_BASE } from '@/lib/api';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -175,14 +176,14 @@ export default function QuizEngine({ quizId }: { quizId: string }) {
     // ── POST to backend ───────────────────────────────────────────────────────
     try {
       // 1. Store result + run AI analysis
-      await fetch('http://127.0.0.1:8000/api/cms/results', {
+      await fetch('${API_BASE}/api/cms/results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       // 2. Also post to attempt tracker
-      await fetch(`http://127.0.0.1:8000/api/student/submit-quiz/attempt-${safeId}`, {
+      await fetch(`${API_BASE}/api/student/submit-quiz/attempt-${safeId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

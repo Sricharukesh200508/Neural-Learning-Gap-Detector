@@ -1,5 +1,6 @@
 'use client';
 
+import { API_BASE } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -44,7 +45,7 @@ export default function MyQuizzesPage() {
       return;
     }
     
-    fetch(`http://localhost:8000/api/student/assigned-quizzes?student_id=${studentId}`)
+    fetch(`${API_BASE}/api/student/assigned-quizzes?student_id=${studentId}`)
       .then(r => r.json())
       .then(data => {
         setQuizzes({ active: data.active || [], upcoming: data.upcoming || [], completed: data.completed || [] });
@@ -64,7 +65,7 @@ export default function MyQuizzesPage() {
   const confirmAndStart = async () => {
     if (!consent.quiz) return;
     const studentId = localStorage.getItem('student_id') || 'ST_ANON';
-    const res = await fetch(`http://localhost:8000/api/student/start-quiz/${consent.quiz.assignment_id}`, {
+    const res = await fetch(`${API_BASE}/api/student/start-quiz/${consent.quiz.assignment_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ student_id: studentId })

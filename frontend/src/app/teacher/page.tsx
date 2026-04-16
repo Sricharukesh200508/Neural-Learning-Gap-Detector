@@ -1,5 +1,6 @@
 'use client';
 
+import { API_BASE } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -39,7 +40,7 @@ export default function TeacherDashboard() {
     }
 
     // Fetch actual accurate numbers for the heatmap
-    fetch('http://127.0.0.1:8000/api/teacher/results')
+    fetch('${API_BASE}/api/teacher/results')
       .then(r => r.json())
       .then(resData => {
          const results = resData.results || [];

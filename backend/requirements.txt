@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+supabase
+pydantic
+python-multipart
+websockets
+torch
+torchvision
+opencv-python-headless
+mediapipe
+requests
+pandas
+python-dotenv
+celery
+redis
+groq

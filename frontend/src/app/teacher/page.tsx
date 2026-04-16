@@ -99,6 +99,7 @@ export default function TeacherDashboard() {
            
            <nav className="flex flex-col gap-8">
               <a href="/teacher" title="Analytics Hub" className="text-neon-blue hover:scale-110 transition-all"><BarChart3 size={20} /></a>
+              <a href="/teacher/results" title="Student Results" className="text-gray-500 hover:text-white transition-all"><Users size={20} /></a>
               <a href="/teacher/subjects" title="Subject CMS" className="text-gray-500 hover:text-white transition-all"><Database size={20} /></a>
               <a href="/teacher/questions" title="Question Bank" className="text-gray-500 hover:text-white transition-all"><Brain size={20} /></a>
               <a href="/teacher/quizzes/editor" title="Quiz Architect" className="text-gray-500 hover:text-white transition-all"><Sparkles size={20} /></a>

@@ -142,6 +142,58 @@ async def add_question(question: dict):
     write_db(db)
     return {"status": "success", "message": "Neuron added to question bank"}
 
+@app.post("/api/cms/results")
+async def store_result(result: dict):
+    """Student quiz result → persisted for teacher AI analytics dashboard."""
+    import datetime
+    db = read_db()
+    if "results" not in db:
+        db["results"] = []
+    result["submitted_at"] = datetime.datetime.utcnow().isoformat()
+    # Run AI gap scoring
+    percentage = result.get("score", result.get("percentage", 0))
+    look_away = result.get("look_away_count", 0)
+    ai_confidence = max(0, percentage - (look_away * 2))  # penalize distractions
+    result["ai_integrity_score"] = round(ai_confidence, 1)
+    result["ai_flag"] = look_away > 5
+    result["ai_comment"] = (
+        f"High integrity — {look_away} deviation events." if look_away <= 5
+        else f"⚠ Forensic flag: {look_away} gaze deviations. Manual review recommended."
+    )
+    db["results"].append(result)
+    write_db(db)
+    return {
+        "status": "success",
+        "ai_integrity_score": result["ai_integrity_score"],
+        "ai_flag": result["ai_flag"],
+        "ai_comment": result["ai_comment"],
+        "message": "Result transmitted to neural gap detector"
+    }
+
+@app.get("/api/teacher/results")
+async def get_teacher_results():
+    """Teacher fetches all student results with AI analysis — for the teacher dashboard."""
+    db = read_db()
+    results = db.get("results", [])
+    
+    # Aggregate analytics
+    if results:
+        avg_score = sum(r.get("score", r.get("percentage", 0)) for r in results) / len(results)
+        flagged = sum(1 for r in results if r.get("ai_flag"))
+    else:
+        avg_score = 0
+        flagged = 0
+
+    return {
+        "results": results,
+        "summary": {
+            "total_submissions": len(results),
+            "average_score": round(avg_score, 1),
+            "flagged_for_review": flagged,
+            "completion_rate": f"{len(results)} submitted"
+        }
+    }
+
 # ── Quiz Assignment & Delivery Pipeline ───────────────────────────────────────
 
 @app.post("/api/teacher/assignments")

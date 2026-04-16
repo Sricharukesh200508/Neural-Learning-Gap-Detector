@@ -13,15 +13,15 @@ import {
 } from 'lucide-react';
 
 const quizSchema = z.object({
-  title: z.string().min(5, "Title is too short"),
-  description: z.string().min(20, "Please provide a detailed description"),
-  duration: z.number().min(5).max(180),
-  passingScore: z.number().min(0).max(100),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional().default(''),
+  duration: z.number().min(1).max(180),
+  passingScore: z.number().min(0).max(100).optional().default(40),
   proctoring: z.boolean().default(true),
   randomize: z.boolean().default(true),
   attempts: z.number().min(1).max(5),
-  startTime: z.string(),
-  endTime: z.string(),
+  startTime: z.string().optional().default(''),
+  endTime: z.string().optional().default(''),
 });
 
 export default function QuizEditor() {
@@ -34,16 +34,21 @@ export default function QuizEditor() {
     { id: 2, text: "Implement a recursive function for Fibonacci numbers.", points: 10, difficulty: 'Medium' }
   ]);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, watch, getValues, formState: { errors } } = useForm({
     resolver: zodResolver(quizSchema),
     defaultValues: {
       proctoring: true,
       randomize: true,
       duration: 30,
       passingScore: 40,
-      attempts: 1
+      attempts: 1,
+      title: '',
+      description: '',
+      startTime: '',
+      endTime: '',
     }
   });
+  const [deployStatus, setDeployStatus] = useState<'idle' | 'deploying' | 'success' | 'error'>('idle');
 
   // Auto-save simulation
   useEffect(() => {
@@ -56,11 +61,14 @@ export default function QuizEditor() {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const handleDeploy = async (data: any) => {
+  const handleDeploy = async () => {
+    const data = getValues();
+    const title = data.title?.trim() || 'Untitled Quiz';
+    setDeployStatus('deploying');
     try {
-      setIsSaved(false);
       const payload = {
         ...data,
+        title,
         id: `qz-${Date.now()}`,
         questions,
         timestamp: new Date().toISOString()
@@ -73,13 +81,19 @@ export default function QuizEditor() {
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const resData = await res.json();
         setDeployedQuizId(payload.id);
+        setDeployStatus('success');
         setIsSaved(true);
-        alert('NEURAL QUIZ DEPLOYED — NOW ASSIGN IT TO STUDENTS!');
+        setTimeout(() => setDeployStatus('idle'), 3000);
+      } else {
+        setDeployStatus('error');
+        setTimeout(() => setDeployStatus('idle'), 3000);
       }
     } catch (err) {
       console.error('Deployment Failed:', err);
+      setDeployStatus('error');
+      setTimeout(() => setDeployStatus('idle'), 3000);
     }
   };
 
@@ -114,11 +128,24 @@ export default function QuizEditor() {
               <Users size={16} /> ASSIGN TO CLASS
            </button>
            <button 
-              onClick={handleSubmit(handleDeploy)}
-              className="flex items-center gap-2 px-8 py-3 bg-neon-blue text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:scale-105 transition-all shadow-xl shadow-neon-blue/20"
-           >
-              <Share2 size={16} /> DEPLOY QUIZ
-           </button>
+               onClick={handleDeploy}
+               disabled={deployStatus === 'deploying'}
+               className={`flex items-center gap-2 px-8 py-3 font-black text-xs uppercase tracking-widest rounded-2xl hover:scale-105 transition-all shadow-xl ${
+                 deployStatus === 'success'
+                   ? 'bg-green-500 text-white shadow-green-500/20'
+                   : deployStatus === 'error'
+                   ? 'bg-red-500 text-white shadow-red-500/20'
+                   : deployStatus === 'deploying'
+                   ? 'bg-neon-blue/50 text-black cursor-wait'
+                   : 'bg-neon-blue text-black shadow-neon-blue/20'
+               }`}
+            >
+               {deployStatus === 'deploying' && <div className="w-4 h-4 rounded-full border-2 border-black border-t-transparent animate-spin" />}
+               {deployStatus === 'success' && <CheckCircle size={16} />}
+               {deployStatus === 'error' && <Share2 size={16} />}
+               {deployStatus === 'idle' && <Share2 size={16} />}
+               {deployStatus === 'deploying' ? 'DEPLOYING...' : deployStatus === 'success' ? 'DEPLOYED ✓' : deployStatus === 'error' ? 'RETRY DEPLOY' : 'DEPLOY QUIZ'}
+            </button>
         </div>
       </header>
 

@@ -88,19 +88,33 @@ import os as _os
 STORAGE_PATH = _os.path.join(_os.path.dirname(__file__), "storage", "database.json")
 
 def read_db():
+    EMPTY_DB = {"subjects": [], "questions": [], "quizzes": [], "assignments": [], "attempts": []}
     if not _os.path.exists(STORAGE_PATH):
-        return {"subjects": [], "questions": [], "quizzes": [], "assignments": [], "attempts": []}
-    with open(STORAGE_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    # Ensure all collections exist for backward compat
-    for col in ["subjects", "questions", "quizzes", "assignments", "attempts"]:
-        if col not in data:
-            data[col] = []
-    return data
+        write_db(EMPTY_DB)
+        return EMPTY_DB
+    try:
+        # utf-8-sig strips BOM automatically if present
+        with open(STORAGE_PATH, "r", encoding="utf-8-sig") as f:
+            content = f.read().strip()
+        if not content:
+            write_db(EMPTY_DB)
+            return EMPTY_DB
+        data = json.loads(content)
+        for col in ["subjects", "questions", "quizzes", "assignments", "attempts"]:
+            if col not in data:
+                data[col] = []
+        return data
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        print(f"[DB] Corruption detected ({e}), resetting to empty database.")
+        write_db(EMPTY_DB)
+        return EMPTY_DB
 
 def write_db(data):
-    with open(STORAGE_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+    # Ensure storage directory exists
+    _os.makedirs(_os.path.dirname(STORAGE_PATH), exist_ok=True)
+    # Write clean UTF-8 WITHOUT BOM (no newline='' needed, json handles it)
+    with open(STORAGE_PATH, "w", encoding="utf-8", newline="") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 # ── Core CMS ──────────────────────────────────────────────────────────────────
 @app.get("/api/cms/data")

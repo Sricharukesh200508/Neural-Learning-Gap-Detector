@@ -25,7 +25,7 @@ export default function StudentStudyPlanTimeline({ plan }: { plan: any }) {
     // Sync progress to teacher dashboard
     const sid = localStorage.getItem('student_id');
     if (sid) {
-      await fetch('${API_BASE}/api/student/study-plan-progress', {
+      await fetch(`${API_BASE}/api/student/study-plan-progress`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,7 +40,7 @@ export default function StudentStudyPlanTimeline({ plan }: { plan: any }) {
   const finishPlan = async () => {
     const sid = localStorage.getItem('student_id');
     if (sid) {
-      await fetch('${API_BASE}/api/student/study-plan-progress', {
+      await fetch(`${API_BASE}/api/student/study-plan-progress`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

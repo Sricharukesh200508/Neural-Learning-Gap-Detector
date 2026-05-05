@@ -29,12 +29,12 @@ const IRIS_LEFT  = 468; // left iris  centre
 const IRIS_RIGHT = 473; // right iris centre
 
 // ── Tunable thresholds ──────────────────────────────────────────────────────
-const EAR_CLOSE_THRESHOLD  = 0.20;  // below → eye considered closed
-const EAR_BLINK_FRAMES     = 3;     // consecutive frames below to flag (avoids blink FP)
-const GAZE_X_MIN = 0.35;
-const GAZE_X_MAX = 0.65;
-const GAZE_Y_MIN = 0.30;
-const GAZE_Y_MAX = 0.72;
+const EAR_CLOSE_THRESHOLD  = 0.18;  // below → eye considered closed (was 0.20, less sensitive)
+const EAR_BLINK_FRAMES     = 4;     // consecutive frames below to flag (was 3, avoids blink FP)
+const GAZE_X_MIN = 0.28;            // wider than 0.35 — tolerate natural micro-head-turns
+const GAZE_X_MAX = 0.72;            // wider than 0.65
+const GAZE_Y_MIN = 0.22;            // wider than 0.30 — tolerate looking slightly up/down
+const GAZE_Y_MAX = 0.78;            // wider than 0.72
 
 // ── Euclidean distance between two landmarks ────────────────────────────────
 function dist(a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }) {
@@ -78,6 +78,7 @@ export default function MediaPipeController({
   const [status, setStatus]       = useState<ProctorStatus>('initializing');
   const [earValue, setEarValue]   = useState(1);
   const [gazeXY, setGazeXY]      = useState({ x: 0.5, y: 0.5 });
+  const [retryCount, setRetryCount] = useState(0);
   const closedFramesRef           = useRef(0);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function MediaPipeController({
 
         faceMesh.setOptions({
           maxNumFaces: 1,
-          refineLandmarks: true,       // required for iris landmarks 468+
+          refineLandmarks: true,
           minDetectionConfidence: 0.65,
           minTrackingConfidence: 0.65,
         });
@@ -133,14 +134,13 @@ export default function MediaPipeController({
             return;
           }
 
-          const lm = faces[0];  // 478 landmarks (468 mesh + 10 iris)
+          const lm = faces[0];
 
           // ── EAR ─────────────────────────────────────────────────────────
           const earR = earForEye(lm, R_EYE);
           const earL = earForEye(lm, L_EYE);
           const earAvg = (earR + earL) / 2;
 
-          // Require N consecutive frames so natural blinks don't trigger
           if (earAvg < EAR_CLOSE_THRESHOLD) {
             closedFramesRef.current++;
           } else {
@@ -165,7 +165,6 @@ export default function MediaPipeController({
           const isLookingAway = isGazeAway || eyesClosed;
 
           // ── Lip sync (mouth openness) ────────────────────────────────────
-          // Upper lip thin: 13, Lower lip thin: 14
           const lipSync = lm[13] && lm[14] ? Math.abs(lm[13].y - lm[14].y) : 0;
 
           // ── Update UI status ─────────────────────────────────────────────
@@ -193,6 +192,9 @@ export default function MediaPipeController({
 
         if (!videoRef.current || destroyed) return;
 
+        // Small delay to ensure any previous camera session is released by the OS
+        await new Promise(r => setTimeout(r, 100));
+
         camera = new Camera(videoRef.current, {
           onFrame: async () => {
             if (!destroyed && videoRef.current && faceMesh) {
@@ -203,11 +205,15 @@ export default function MediaPipeController({
           height: 480,
         });
 
-        camera.start();
+        await camera.start();
         if (!destroyed) setStatus('active');
 
-      } catch (err) {
+      } catch (err: any) {
         console.error('[MediaPipe] Engine crash:', err);
+        // Specifically handle NotReadableError
+        if (err.name === 'NotReadableError' || err.message?.includes('NotReadableError')) {
+          console.warn('[MediaPipe] Camera is already in use by another application.');
+        }
         if (!destroyed) setStatus('error');
       }
     };
@@ -216,10 +222,17 @@ export default function MediaPipeController({
 
     return () => {
       destroyed = true;
-      try { camera?.stop(); }   catch (_) {}
+      try { 
+        camera?.stop();
+        if (videoRef.current && (videoRef.current.srcObject as MediaStream)) {
+          const stream = videoRef.current.srcObject as MediaStream;
+          stream.getTracks().forEach(track => track.stop());
+          videoRef.current.srcObject = null;
+        }
+      } catch (_) {}
       try { faceMesh?.close(); } catch (_) {}
     };
-  }, []); // ← empty deps: stable, runs once on mount
+  }, [retryCount]); // Refire on retry
 
   // ── Status colour helpers ───────────────────────────────────────────────
   const dot: Record<ProctorStatus, string> = {
@@ -260,29 +273,49 @@ export default function MediaPipeController({
         muted
       />
 
-      {/* ── Alert overlay (face hidden / eyes closed) ────────────── */}
-      {(status === 'face_hidden' || status === 'eyes_closed' || status === 'gaze_away') && (
+      {/* ── Alert overlay (face hidden / eyes closed / error) ────────────── */}
+      {(status === 'face_hidden' || status === 'eyes_closed' || status === 'gaze_away' || status === 'error') && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none"
           style={{
             background:
-              status === 'face_hidden'
+              status === 'error'
+                ? 'rgba(127,29,29,0.4)'
+                : status === 'face_hidden'
                 ? 'rgba(239,68,68,0.15)'
                 : status === 'eyes_closed'
                 ? 'rgba(249,115,22,0.12)'
                 : 'rgba(250,204,21,0.08)',
           }}
         >
-          <span className="text-2xl">
-            {status === 'face_hidden' ? '😶' : status === 'eyes_closed' ? '😴' : '👁️'}
-          </span>
-          <span className="text-[9px] font-black uppercase tracking-widest text-white/80">
-            {status === 'face_hidden'
-              ? 'Face Hidden'
-              : status === 'eyes_closed'
-              ? 'Eyes Closed'
-              : 'Look Forward'}
-          </span>
+          {status === 'error' ? (
+            <div className="flex flex-col items-center gap-3 pointer-events-auto">
+              <span className="text-2xl">🚫</span>
+              <div className="text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white">Camera Blocked</p>
+                <p className="text-[8px] text-gray-300 mt-1 max-w-[120px]">Check if another app is using the camera.</p>
+              </div>
+              <button 
+                onClick={() => { setStatus('initializing'); setRetryCount(c => c + 1); }}
+                className="mt-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-[8px] font-black uppercase tracking-widest text-white transition-all"
+              >
+                Retry Link
+              </button>
+            </div>
+          ) : (
+            <>
+              <span className="text-2xl">
+                {status === 'face_hidden' ? '😶' : status === 'eyes_closed' ? '😴' : '👁️'}
+              </span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-white/80">
+                {status === 'face_hidden'
+                  ? 'Face Hidden'
+                  : status === 'eyes_closed'
+                  ? 'Eyes Closed'
+                  : 'Look Forward'}
+              </span>
+            </>
+          )}
         </div>
       )}
 

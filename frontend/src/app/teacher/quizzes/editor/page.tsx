@@ -43,7 +43,7 @@ export default function QuizEditor() {
         return;
      }
      try {
-        const res = await fetch('${API_BASE}/api/cms/data');
+        const res = await fetch(`${API_BASE}/api/cms/data`);
         const data = await res.json();
         setBankQuestions(data.questions || []);
         setShowBank(true);
@@ -102,7 +102,7 @@ export default function QuizEditor() {
         timestamp: new Date().toISOString()
       };
       
-      const res = await fetch('${API_BASE}/api/cms/quizzes', {
+      const res = await fetch(`${API_BASE}/api/cms/quizzes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

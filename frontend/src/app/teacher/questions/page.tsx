@@ -16,7 +16,7 @@ export default function AdvancedQuestionBank() {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch('${API_BASE}/api/cms/data');
+      const res = await fetch(`${API_BASE}/api/cms/data`);
       const data = await res.json();
       setQuestions(data.questions || []);
     } catch(err) {
@@ -30,7 +30,7 @@ export default function AdvancedQuestionBank() {
 
   const handleSave = async (data: any) => {
     try {
-      await fetch('${API_BASE}/api/cms/questions', {
+      await fetch(`${API_BASE}/api/cms/questions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

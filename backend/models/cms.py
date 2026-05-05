@@ -28,7 +28,7 @@ quiz_question_association = Table(
 
 class Subject(Base):
     __tablename__ = "subjects"
-    id = Column(Integer, PRIMARY KEY=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), unique=True, index=True)
     description = Column(Text)
     grade = Column(String(20))
@@ -42,7 +42,7 @@ class Subject(Base):
 
 class Question(Base):
     __tablename__ = "questions"
-    id = Column(Integer, PRIMARY KEY=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     subject_id = Column(Integer, ForeignKey("subjects.id"))
     type = Column(Enum(QuestionType))
     text = Column(Text) # Supports Markdown + LaTeX
@@ -61,7 +61,7 @@ class Question(Base):
 
 class Quiz(Base):
     __tablename__ = "quizzes"
-    id = Column(Integer, PRIMARY KEY=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     subject_id = Column(Integer, ForeignKey("subjects.id"))
     title = Column(String(200))
     description = Column(Text)
@@ -83,7 +83,7 @@ class Quiz(Base):
 
 class QuizAttempt(Base):
     __tablename__ = "quiz_attempts"
-    id = Column(Integer, PRIMARY KEY=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     quiz_id = Column(Integer, ForeignKey("quizzes.id"))
     student_id = Column(String(100)) # Linked to Supabase User ID
     score = Column(Float, nullable=True)
@@ -100,7 +100,7 @@ class QuizAttempt(Base):
 
 class QuestionResponse(Base):
     __tablename__ = "question_responses"
-    id = Column(Integer, PRIMARY KEY=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     attempt_id = Column(Integer, ForeignKey("quiz_attempts.id"))
     question_id = Column(Integer, ForeignKey("questions.id"))
     answer_given = Column(Text)

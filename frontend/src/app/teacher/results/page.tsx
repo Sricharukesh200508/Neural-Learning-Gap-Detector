@@ -51,7 +51,7 @@ export default function TeacherResultsPage() {
   const generatePlanForStudent = async (studentData: Result) => {
     setIsGeneratingPlan(true);
     try {
-      const res = await fetch('${API_BASE}/api/student/generate-plan', {
+      const res = await fetch(`${API_BASE}/api/student/generate-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ export default function TeacherResultsPage() {
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const res = await fetch('${API_BASE}/api/teacher/results');
+      const res = await fetch(`${API_BASE}/api/teacher/results`);
       const data = await res.json();
       setResults(data.results || []);
       setSummary(data.summary || null);

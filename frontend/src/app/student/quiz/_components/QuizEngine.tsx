@@ -176,7 +176,7 @@ export default function QuizEngine({ quizId }: { quizId: string }) {
     // ── POST to backend ───────────────────────────────────────────────────────
     try {
       // 1. Store result + run AI analysis
-      await fetch('${API_BASE}/api/cms/results', {
+      await fetch(`${API_BASE}/api/cms/results`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

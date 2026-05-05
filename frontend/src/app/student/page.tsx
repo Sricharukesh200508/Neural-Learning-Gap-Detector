@@ -38,7 +38,7 @@ export default function StudentDashboard() {
       formData.append('topic', 'Recursion');
       formData.append('mastery', '0.45');
       
-      const res = await fetch('${API_BASE}/analyze/gap_detection', {
+      const res = await fetch(`${API_BASE}/analyze/gap_detection`, {
         method: 'POST',
         body: formData
       });
@@ -66,7 +66,7 @@ export default function StudentDashboard() {
     }
     setStudentIdentity({ id: sid, name: sname || 'Student' });
 
-    fetch('${API_BASE}/api/cms/data')
+    fetch(`${API_BASE}/api/cms/data`)
       .then(res => res.json())
       .then(data => setQuizzes(data.quizzes || []))
       .catch(err => console.error('Cloud Sync Failed:', err));
@@ -76,7 +76,7 @@ export default function StudentDashboard() {
       .then(data => setMasteryData(data.mastery || []))
       .catch(err => console.error(err));
 
-    fetch('${API_BASE}/api/teacher/results')
+    fetch(`${API_BASE}/api/teacher/results`)
       .then(res => res.json())
       .then(data => {
          const results = data.results || [];

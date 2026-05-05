@@ -40,7 +40,7 @@ export default function TeacherDashboard() {
     }
 
     // Fetch actual accurate numbers for the heatmap
-    fetch('${API_BASE}/api/teacher/results')
+    fetch(`${API_BASE}/api/teacher/results`)
       .then(r => r.json())
       .then(resData => {
          const results = resData.results || [];

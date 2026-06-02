@@ -1,8 +1,16 @@
 # 🧠 Neural Learning Gap Detector (Industry 2026 Level)
 
-![Dashboard](./dashboard.png)
-
 A next-generation, AI-powered educational platform designed to identify learning gaps, track student mastery in real-time, and generate highly personalized remedial action plans using advanced LLM reasoning and forensic behavioral tracking.
+
+## 📸 System Interfaces
+
+### AI Co-Pilot Teacher Node
+![Teacher Dashboard](./teacher_dashboard.png)
+*The Teacher Node features a real-time **Multimodal Engagement Heatmap 2.0** that plots student mastery across various concepts (Recursion, Trees, Dynamic Programming). It also includes a **Student Real-Time Node** for identifying high-risk students and a **Content Deployment Hub** for immediate quiz assignment.*
+
+### Neural Coach & Student Portal
+![Student Dashboard](./student_dashboard.png)
+*The Student Portal features the **Neural Coach**, which generates a **Personalized 7-Day Study Protocol** based on detected gaze deviations and learning gaps. It integrates a **Study Buddy AI** for instant conceptual help and a **Neural Assessment Center** for active learning.*
 
 ## 🚀 System Architecture
 

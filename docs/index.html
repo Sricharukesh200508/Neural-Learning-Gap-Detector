@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Learning Gap Detector | Documentation</title>
+  <meta name="description" content="AI-powered educational platform designed to identify learning gaps and track student mastery in real-time.">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-brain" style="color: #a855f7;"></i> NeuralTracker
+      </div>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#tech-stack">Stack</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#screenshots">Gallery</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="overview">
+    <div class="container">
+      <div class="hero-badges reveal">
+        <span class="badge">v2.0 Industry 2026 Level</span>
+      </div>
+      <h1 class="reveal" style="transition-delay: 0.1s;">Neural Learning<br>Gap Detector</h1>
+      <div class="hero-content reveal" style="transition-delay: 0.2s;">
+        <p>A next-generation, AI-powered educational platform designed to identify learning gaps, track student mastery in real-time, and generate highly personalized remedial action plans using advanced LLM reasoning and forensic behavioral tracking.</p>
+      </div>
+      <div class="cta-group reveal" style="transition-delay: 0.3s;">
+        <a href="#installation" class="btn btn-primary"><i class="fas fa-rocket"></i> Get Started</a>
+        <a href="https://github.com/Sricharukesh200508/Neural-Learning-Gap-Detector" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features">
+    <div class="container">
+      <h2 class="reveal">Next-Gen Capabilities</h2>
+      <div class="features-grid">
+        <div class="glass-card reveal">
+          <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Real-time Analytics</h3>
+          <p>WebSocket connections stream high-frequency forensic data including gaze tracking and lip-sync deviations to monitor active engagement.</p>
+        </div>
+        <div class="glass-card reveal" style="transition-delay: 0.1s;">
+          <div class="feature-icon"><i class="fas fa-brain"></i></div>
+          <h3>Knowledge Decay Prediction</h3>
+          <p>Simulates Deep Knowledge Tracing (DKT) to predict mastery decay over a 48-72 hour window, preventing knowledge loss before it happens.</p>
+        </div>
+        <div class="glass-card reveal" style="transition-delay: 0.2s;">
+          <div class="feature-icon"><i class="fas fa-robot"></i></div>
+          <h3>LLM Engine Integration</h3>
+          <p>Uses Groq (Llama 3.1) to generate hyper-personalized 7-day study plans with Pomodoro intervals and gamification elements.</p>
+        </div>
+        <div class="glass-card reveal" style="transition-delay: 0.3s;">
+          <div class="feature-icon"><i class="fas fa-eye"></i></div>
+          <h3>MediaPipe Deep Proctoring</h3>
+          <p>Utilizes WebGL tracking to capture 3D facial vectors, calculating lip synchrony mapping to detect whispering and pupil deviation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section id="tech-stack">
+    <div class="container">
+      <h2 class="reveal">Built With Modern Tech</h2>
+      <div class="tech-stack reveal">
+        <div class="tech-item"><i class="fab fa-python" style="color: #3b82f6;"></i> Python 3.10+</div>
+        <div class="tech-item"><i class="fas fa-bolt" style="color: #059669;"></i> FastAPI</div>
+        <div class="tech-item"><i class="fab fa-react" style="color: #61dafb;"></i> React 19</div>
+        <div class="tech-item"><i class="fas fa-n" style="color: #ffffff;"></i> Next.js 16.2</div>
+        <div class="tech-item"><i class="fab fa-node-js" style="color: #22c55e;"></i> Node.js 20+</div>
+        <div class="tech-item"><i class="fas fa-microchip" style="color: #a855f7;"></i> Groq Llama 3.1</div>
+        <div class="tech-item"><i class="fas fa-eye" style="color: #ef4444;"></i> MediaPipe</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section id="installation">
+    <div class="container">
+      <h2 class="reveal">Setup & Deployment</h2>
+      
+      <div class="glass-card reveal" style="margin-bottom: 2rem;">
+        <h3>1. Backend API Start Sequence</h3>
+        <p>Ensure you have Python 3.10+ installed. The neural engine serves as the core intelligence layer.</p>
+        <div class="code-block">
+          <button class="copy-btn"><i class="far fa-copy"></i> Copy</button>
+          <code>cd backend
+python -m venv myenv
+.\myenv\Scripts\activate   # Windows
+pip install -r requirements.txt
+python main.py</code>
+        </div>
+        <p><i class="fas fa-info-circle" style="color: #6366f1;"></i> The API will be available at <code>http://localhost:8000</code>.</p>
+      </div>
+
+      <div class="glass-card reveal">
+        <h3>2. Frontend Launch Sequence</h3>
+        <p>Ensure you have Node.js 20+ installed. The immersive dashboard provides deep insights.</p>
+        <div class="code-block">
+          <button class="copy-btn"><i class="far fa-copy"></i> Copy</button>
+          <code>cd frontend
+npm install
+npm run dev</code>
+        </div>
+        <p><i class="fas fa-info-circle" style="color: #6366f1;"></i> The Dashboard will be accessible at <code>http://localhost:3000</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usage Section -->
+  <section id="usage">
+    <div class="container">
+      <h2 class="reveal">System Usage</h2>
+      <div class="features-grid">
+        <div class="glass-card reveal">
+          <h3>Teacher Node</h3>
+          <p>The Teacher Node provides comprehensive oversight capabilities:</p>
+          <ul style="padding-left: 1.5rem; color: var(--text-muted); margin-top: 1rem;">
+            <li style="margin-bottom: 0.5rem;">Monitor class anomalies via the Multimodal Engagement Heatmap.</li>
+            <li style="margin-bottom: 0.5rem;">Deploy assessments directly to student nodes with randomized vectors.</li>
+            <li style="margin-bottom: 0.5rem;">View automatically generated learning interventions.</li>
+          </ul>
+        </div>
+        <div class="glass-card reveal">
+          <h3>Student Portal</h3>
+          <p>The Student Portal delivers an optimized learning environment:</p>
+          <ul style="padding-left: 1.5rem; color: var(--text-muted); margin-top: 1rem;">
+            <li style="margin-bottom: 0.5rem;">Access the Neural Coach for a Personalized 7-Day Study Protocol.</li>
+            <li style="margin-bottom: 0.5rem;">Take AI-proctored neural quizzes with instant conceptual feedback.</li>
+            <li style="margin-bottom: 0.5rem;">Interact with Study Buddy AI for real-time problem solving.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section id="screenshots">
+    <div class="container">
+      <h2 class="reveal">System Interfaces</h2>
+      <div class="screenshot-grid">
+        <div class="screenshot reveal">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" alt="Teacher Dashboard" onerror="this.src='https://placehold.co/800x450/1e293b/a855f7?text=Teacher+Dashboard'">
+          <div class="screenshot-caption">AI Co-Pilot Teacher Node (Multimodal Heatmap)</div>
+        </div>
+        <div class="screenshot reveal" style="transition-delay: 0.2s;">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" alt="Student Dashboard" onerror="this.src='https://placehold.co/800x450/1e293b/6366f1?text=Student+Dashboard'">
+          <div class="screenshot-caption">Neural Coach & Student Portal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Future Enhancements Section -->
+  <section id="future">
+    <div class="container">
+      <h2 class="reveal">Future Enhancements</h2>
+      <div class="glass-card reveal" style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">We are constantly pushing the boundaries of educational technology. Upcoming features include:</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+          <span class="badge"><i class="fas fa-vr-cardboard"></i> VR Classroom Integration</span>
+          <span class="badge"><i class="fas fa-brain"></i> Advanced EEG Feedback</span>
+          <span class="badge"><i class="fas fa-network-wired"></i> Distributed CMS Sync</span>
+          <span class="badge"><i class="fas fa-language"></i> Real-time Multi-lingual Translation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Footer Section -->
+  <footer id="contact">
+    <div class="container reveal">
+      <h2>Join the Revolution</h2>
+      <p style="margin-bottom: 2rem;">Help us shape the future of AI-driven education.</p>
+      
+      <div class="social-links">
+        <a href="https://github.com/Sricharukesh200508/Neural-Learning-Gap-Detector" target="_blank" title="GitHub Repository"><i class="fab fa-github"></i></a>
+        <a href="#" title="Documentation"><i class="fas fa-book"></i></a>
+        <a href="mailto:contact@neuraltracker.com" title="Email Support"><i class="fas fa-envelope"></i></a>
+      </div>
+      
+      <p class="copyright">&copy; 2026 Neural Learning Gap Detector. Open Source Project.</p>
+    </div>
+  </footer>
+
+  <!-- Custom Script -->
+  <script src="js/script.js"></script>
+</body>
+</html>
